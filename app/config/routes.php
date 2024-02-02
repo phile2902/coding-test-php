@@ -67,6 +67,12 @@ return function (RouteBuilder $routes): void {
         $builder->resources('Articles');
 
         /*
+         * Routes for the AuthController
+         */
+        $builder->connect('login', ['controller' => 'Auth', 'action' => 'login']);
+        $builder->connect('logout', ['controller' => 'Auth', 'action' => 'logout']);
+
+        /*
          * Connect catchall routes for all controllers.
          *
          * The `fallbacks` method is a shortcut for
