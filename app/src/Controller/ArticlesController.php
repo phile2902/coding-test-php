@@ -112,7 +112,7 @@ class ArticlesController extends ApiController
         }
 
         if ($this->Articles->delete($article)) {
-            return $this->successResponse(['message' => 'Article deleted']);
+            return $this->successResponse(['message' => 'Article deleted successfully']);
         }
 
         return $this->errorResponse('The article could not be deleted. Please, try again.');
@@ -144,7 +144,7 @@ class ArticlesController extends ApiController
             $article->set('total_likes', ++$totalLikes);
             $this->Articles->save($article);
 
-            return $this->successResponse(['message' => 'Article liked']);
+            return $this->successResponse(['message' => 'Article liked successfully']);
         }
 
         $errorMessage = !empty($failedValidationErrors) ? json_encode($failedValidationErrors) : 'The article could not be liked. Please, try again.';

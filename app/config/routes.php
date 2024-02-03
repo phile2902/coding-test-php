@@ -51,7 +51,7 @@ return function (RouteBuilder $routes): void {
 
     $routes->setExtensions(['json', 'xml']);
 
-    $routes->scope('/', function (RouteBuilder $builder): void {
+    $routes->scope('/api', function (RouteBuilder $builder): void {
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file
@@ -65,15 +65,17 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/pages/*', 'Pages::display');
 
         $builder->resources('Articles', function ($routes) {
-            $routes->post('like', ['action' => 'like']);
+            $routes->post('{article_id}/like', ['controller' => 'Articles', 'action' => 'like']);
         });
 
         /*
          * Routes for the AuthController
          */
-        $builder->post('login', ['controller' => 'Auth', 'action' => 'login']);
-        $builder->post('logout', ['controller' => 'Auth', 'action' => 'logout']);
-        $builder->post('signup', ['controller' => 'Auth', 'action' => 'signup']);
+        $builder->prefix('users', function (RouteBuilder $builder) {
+            $builder->post('login', ['controller' => 'Auth', 'action' => 'login']);
+            $builder->post('logout', ['controller' => 'Auth', 'action' => 'logout']);
+            $builder->post('register', ['controller' => 'Auth', 'action' => 'signup']);
+        });
 
         /*
          * Connect catchall routes for all controllers.
