@@ -64,13 +64,16 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/pages/*', 'Pages::display');
 
-        $builder->resources('Articles');
+        $builder->resources('Articles', function ($routes) {
+            $routes->post('like', ['action' => 'like']);
+        });
 
         /*
          * Routes for the AuthController
          */
-        $builder->connect('login', ['controller' => 'Auth', 'action' => 'login']);
-        $builder->connect('logout', ['controller' => 'Auth', 'action' => 'logout']);
+        $builder->post('login', ['controller' => 'Auth', 'action' => 'login']);
+        $builder->post('logout', ['controller' => 'Auth', 'action' => 'logout']);
+        $builder->post('signup', ['controller' => 'Auth', 'action' => 'signup']);
 
         /*
          * Connect catchall routes for all controllers.

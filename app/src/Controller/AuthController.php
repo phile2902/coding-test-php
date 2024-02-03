@@ -7,7 +7,7 @@ namespace App\Controller;
 use Cake\Http\Response;
 use Cake\Event\EventInterface;
 
-class AuthController extends AppController
+class AuthController extends ApiController
 {
     public function beforeFilter(EventInterface $event)
     {
@@ -22,20 +22,12 @@ class AuthController extends AppController
      */
     public function login()
     {
-        $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
 
         if ($result->isValid()) {
-            $redirect = $this->request->getQuery('redirect', [
-                'controller' => 'Articles',
-                'action' => 'index',
-            ]);
-
-            return $this->redirect($redirect);
-        }
-
-        if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('Invalid username or password'));
+            return $this->successResponse(['message' => 'User logged in successfully']);
+        } else {
+            return $this->errorResponse('Invalid username or password', 401);
         }
     }
 
@@ -51,7 +43,29 @@ class AuthController extends AppController
         if ($result->isValid()) {
             $this->Authentication->logout();
 
-            return $this->redirect(['controller' => 'Auth', 'action' => 'login']);
+            return $this->successResponse(['message' => 'User logged out successfully']);
         }
+    }
+
+    /**
+     * This method returns a successful JSON response with a 200 status code.
+     *
+     * @param array $data
+     * @param int $code
+     *
+     * @return Response
+     */
+    public function signup()
+    {
+        $userTable = $this->getTableLocator()->get('Users');
+        $user = $userTable->newEntity($this->request->getData());
+
+        if (!($failedValidationErrors = $user->getErrors()) && $userTable->save($user)) {
+            return $this->successResponse(['message' => 'User signed up successfully']);
+        }
+
+        $errorMessages = !empty($failedValidationErrors) ? json_encode($failedValidationErrors) : 'User could not sign up';
+
+        return $this->errorResponse($errorMessages);
     }
 }
