@@ -192,7 +192,9 @@ The application should now be accessible at http://localhost:34251
 Table UsersArticleLikes will be like this:
 
 users_article_likes
+
 | column | type | description |
+| --- | --- | --- |
 | id | int | primary key |
 | user_id | int | foreign key to users table |
 | article_id | int | foreign key to articles table |
